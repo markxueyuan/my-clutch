@@ -6,4 +6,5 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [com.cemerick/url "0.1.1"]
                  [clj-http "0.9.2"]
-                 [cheshire "5.3.1"]])
+                 [cheshire "5.3.1"]
+                 [slingshot "0.10.3"]])
