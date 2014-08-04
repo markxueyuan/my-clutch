@@ -83,7 +83,7 @@
         [lines meta] (if header?
                        [(rest lines)
                         (-> (first lines)
-                            )])]))
+                            (string/replace ))])]))
 
 
 
