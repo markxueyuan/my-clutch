@@ -79,12 +79,25 @@
 
 (defn lazy-view-seq
   [response-body header?]
-  (let [lines (util/read-lines response-body)
+  (let [lines (utils/read-lines response-body)
         [lines meta] (if header?
                        [(rest lines)
                         (-> (first lines)
-                            (string/replace ))])]))
+                            (string/replace #",?\"(rows|results)\":\[\s*$" "}")
+                            (json/parse-string true))]
+                       [lines nil])]
+    (with-meta (->> lines
+                    (map (fn [^String line]
+                           (when (.startsWith line "{")
+                             (json/parse-string line true))))
+                    (remove nil?))
+      (dissoc meta :rows))))
 
+(defn view-request
+  [method url & opts]
+  (if-let [response (apply couchdb-request method (assoc url :as :stream) opts)]
+    (lazy-view-seq response true)
+    (throw (java.io.IOException. (str "No such view: " url)))))
 
 
 
